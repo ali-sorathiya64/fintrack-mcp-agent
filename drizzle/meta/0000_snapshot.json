@@ -1,11 +1,11 @@
 {
-  "id": "2e3232a3-9b1c-4aed-b821-3d574af2179a",
+  "id": "382d6735-3bce-4e88-9097-585af78c2fc7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.budgets": {
-      "name": "budgets",
+    "public.applications": {
+      "name": "applications",
       "schema": "",
       "columns": {
         "id": {
@@ -15,23 +15,55 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "category": {
-          "name": "category",
+        "company": {
+          "name": "company",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "monthly_limit": {
-          "name": "monthly_limit",
-          "type": "numeric(12, 2)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "month": {
-          "name": "month",
+        "role": {
+          "name": "role",
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "application_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'applied'"
+        },
+        "applied_at": {
+          "name": "applied_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "salary": {
+          "name": "salary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "job_url": {
+          "name": "job_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -44,22 +76,13 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "budget_category_month_unique": {
-          "name": "budget_category_month_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "category",
-            "month"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.transactions": {
-      "name": "transactions",
+    "public.interviews": {
+      "name": "interviews",
       "schema": "",
       "columns": {
         "id": {
@@ -69,36 +92,29 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "type": {
-          "name": "type",
-          "type": "transaction_type",
-          "typeSchema": "public",
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "amount": {
-          "name": "amount",
-          "type": "numeric(12, 2)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "category": {
-          "name": "category",
+        "round": {
+          "name": "round",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "note": {
-          "name": "note",
-          "type": "text",
+        "scheduled_at": {
+          "name": "scheduled_at",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
-        "occurred_at": {
-          "name": "occurred_at",
-          "type": "date",
+        "feedback": {
+          "name": "feedback",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -108,54 +124,22 @@
           "default": "now()"
         }
       },
-      "indexes": {
-        "txn_occurred_at_idx": {
-          "name": "txn_occurred_at_idx",
-          "columns": [
-            {
-              "expression": "occurred_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
+      "indexes": {},
+      "foreignKeys": {
+        "interviews_application_id_applications_id_fk": {
+          "name": "interviews_application_id_applications_id_fk",
+          "tableFrom": "interviews",
+          "tableTo": "applications",
+          "columnsFrom": [
+            "application_id"
           ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "txn_category_idx": {
-          "name": "txn_category_idx",
-          "columns": [
-            {
-              "expression": "category",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
+          "columnsTo": [
+            "id"
           ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "txn_type_idx": {
-          "name": "txn_type_idx",
-          "columns": [
-            {
-              "expression": "type",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -164,40 +148,16 @@
     }
   },
   "enums": {
-    "public.expense_category": {
-      "name": "expense_category",
+    "public.application_status": {
+      "name": "application_status",
       "schema": "public",
       "values": [
-        "food",
-        "groceries",
-        "transport",
-        "fuel",
-        "shopping",
-        "entertainment",
-        "bills",
-        "health",
-        "rent",
-        "education",
-        "other"
-      ]
-    },
-    "public.income_source": {
-      "name": "income_source",
-      "schema": "public",
-      "values": [
-        "salary",
-        "freelance",
-        "investment",
-        "gift",
-        "other"
-      ]
-    },
-    "public.transaction_type": {
-      "name": "transaction_type",
-      "schema": "public",
-      "values": [
-        "expense",
-        "income"
+        "applied",
+        "screening",
+        "interview",
+        "offer",
+        "rejected",
+        "withdrawn"
       ]
     }
   },
