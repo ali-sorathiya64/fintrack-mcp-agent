@@ -2,7 +2,8 @@ import { applications } from "../db/schema";
 import { db } from "../db/dbClient";
 
 
-export type Application = typeof applications.$inferInsert;   // ← auto type
+export type Application = typeof applications.$inferInsert;  
+
 
 export const createApplication = async (application: Application) => {
   const [newApplication] = await db
@@ -17,4 +18,14 @@ export const createApplication = async (application: Application) => {
   return newApplication;
 };
 
+
+export const getAllAppications =async()=>{
+
+    const application = await db.query.applications.findMany();
+      
+
+    return application;
+
+
+}
 
