@@ -6,12 +6,15 @@
   "scripts": {
     "dev":"tsx watch src/index.ts",
     "run":"tsx src/index.ts",
+    "db:generate":"drizzle-kit generate",
+    "db:migrate":"drizzle-kit migrate",
+    "db:studio":"drizzle-kit studio",
     "build":"tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@langchain/core": "^1.5.1",
     "@langchain/langgraph": "^1.7.5",

@@ -2,6 +2,7 @@ import {config} from 'dotenv';
 import { resolve } from 'node:path';
 import {drizzle} from "drizzle-orm/postgres-js"
 import postgres from 'postgres';
+import * as schema './schema'
 
 config({path:resolve(process.cwd(),'.env')})
 config({path:resolve(process.cwd(),'../env')})
@@ -15,4 +16,6 @@ if (!DATABASE_URL){
 
 const client = postgres(DATABASE_URL);
 
-// export const db  = drizzle(client,{schema})
+export const db  = drizzle(client,{schema})
+
+export  {client,schema}
