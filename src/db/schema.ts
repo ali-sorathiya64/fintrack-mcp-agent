@@ -1,6 +1,7 @@
 
 
 import { date, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";  
 
 
 
@@ -20,7 +21,7 @@ export const applications = pgTable("applications", {
   company: text("company").notNull(),
   role: text("role").notNull(),
   status: ApplicationStatus("status").notNull().default("applied"),
-  appliedAt: date("applied_at").notNull(),
+ appliedAt: date("applied_at").notNull().default(sql`CURRENT_DATE`),
   salary: text("salary"),
   location: text("location"),
   jobUrl: text("job_url"),

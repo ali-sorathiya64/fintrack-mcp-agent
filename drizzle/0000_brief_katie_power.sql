@@ -4,7 +4,7 @@ CREATE TABLE "applications" (
 	"company" text NOT NULL,
 	"role" text NOT NULL,
 	"status" "application_status" DEFAULT 'applied' NOT NULL,
-	"applied_at" date NOT NULL,
+	"applied_at" date DEFAULT CURRENT_DATE NOT NULL,
 	"salary" text,
 	"location" text,
 	"job_url" text,

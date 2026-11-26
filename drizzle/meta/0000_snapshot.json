@@ -1,5 +1,5 @@
 {
-  "id": "382d6735-3bce-4e88-9097-585af78c2fc7",
+  "id": "c5ca21b3-01f3-4515-8cf3-fd151d843ac7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -39,7 +39,8 @@
           "name": "applied_at",
           "type": "date",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_DATE"
         },
         "salary": {
           "name": "salary",
