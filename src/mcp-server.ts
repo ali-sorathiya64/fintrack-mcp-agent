@@ -1,6 +1,7 @@
 import { FastMCP } from "@prefecthq/fastmcp-ts/server";
 import { z } from "zod";
 import { createApplication, deleteApplication, getAllApplications, getApplicationById, updateApplicationDetails } from "./services/applications";
+import { addInterviewFeedback, getInterviewsForApplication, scheduleInterview } from "./services/interview";
 
 const mcpServer = new FastMCP({ name: "job-portal", version: "1.0.0" });
 
@@ -110,6 +111,71 @@ mcpServer.tool({
 }
 
 )
+
+//  schedule-interview 
+mcpServer.tool(
+  {
+    name: "schedule-interview",
+    description: "Schedule a new interview round for an application",
+    input: z.object({
+      applicationId: z.string().describe("The ID of the application"),
+      round: z.string().describe("Interview round (e.g., DSA, System Design, HR)"),
+      scheduledAt: z.string().optional().describe("Date and time of interview (ISO format)"),
+      feedback: z.string().optional().describe("Any initial feedback"),
+    }),
+  },
+  async ({ applicationId, round, scheduledAt, feedback }) => {
+    const interview = await scheduleInterview({
+      applicationId,
+      round,
+      scheduledAt: scheduledAt ? new Date(scheduledAt) : undefined,
+      feedback,
+    });
+    return {
+      message: "Interview scheduled successfully",
+      interview,
+    };
+  }
+);
+
+
+
+//  get-interviews
+mcpServer.tool(
+  {
+    name: "get-interviews",
+    description: "Get all interviews scheduled for a specific application",
+    input: z.object({
+      applicationId: z.string().describe("The ID of the application"),
+    }),
+  },
+  async ({ applicationId }) => {
+    const interviews = await getInterviewsForApplication(applicationId);
+    return {
+      message: "Interviews fetched successfully",
+      interviews,
+    };
+  }
+);
+
+// add-interview-feedback
+mcpServer.tool(
+  {
+    name: "add-interview-feedback",
+    description: "Add or update feedback for a specific interview",
+    input: z.object({
+      id: z.string().describe("The ID of the interview"),
+      feedback: z.string().describe("The feedback text"),
+    }),
+  },
+  async ({ id, feedback }) => {
+    const interview = await addInterviewFeedback(id, feedback);
+    return {
+      message: "Feedback added successfully",
+      interview,
+    };
+  }
+);
 
 
 mcpServer.run().catch(console.error);
