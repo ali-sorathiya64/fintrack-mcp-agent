@@ -5,6 +5,16 @@ import { eq } from "drizzle-orm";
 
 export type Application = typeof applications.$inferInsert;  
 
+export type UpdateApplicationInput = Partial<{
+  company: string;
+  role: string;
+  status: "applied" | "screening" | "interview" | "offer" | "rejected" | "withdrawn";
+  salary: string;
+  location: string;
+  jobUrl: string;
+  notes: string;
+}>;
+
 
 export const createApplication = async (application: Application) => {
   const [newApplication] = await db
@@ -43,22 +53,24 @@ export const getApplicationById  = async(id:string)=>{
 
 }
 
-export const updateApplicationDetails =async(id:string,application:Partial<Pick<Application,"company" | 
-    "role" | "status" |"jobUrl" | "location" |"notes" | "salary">>
-) =>{
 
-    const [updateApplication] = await db.update(applications).set(application)
-    .where(eq(applications.id,id))
+
+export const updateApplicationDetails = async (
+  id: string,
+  application: UpdateApplicationInput
+) => {
+  const [updated] = await db
+    .update(applications)
+    .set(application)
+    .where(eq(applications.id, id))
     .returning();
 
-    if (!updateApplication){
-        throw new Error("Application not found")
-    }
-    
+  if (!updated) {
+    throw new Error("Application not found");
+  }
 
-    return updateApplication;
-
-}
+  return updated;
+};
 
 export const deleteApplication = async(id:string)=>{
 

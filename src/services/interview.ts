@@ -18,16 +18,17 @@ export const scheduleInterview = async(interview:Interview)=>
 
 
 
-export const getInterviewsForApplication = async (applicationId: string) => {
-  return await db.query.interviews.findMany({
-    where: eq(interviews.applicationId, applicationId),
-    orderBy: (interviews, { asc }) => [asc(interviews.scheduledAt)],
-  });
+export const getInterviewsForApplication =async(applicationId:string)=>{
+    return await db.query.interviews.findMany({
+        where:eq(interviews.applicationId,applicationId),
+        orderBy:(interviews,{asc})=>[asc(interviews.scheduledAt)]
+    })
+
 };
 
 
 export const addInterviewFeedback = async(id:string, feedback:string)=>{
-    const addFeedback = await db.update(interviews).set({feedback:feedback})
+    const [addFeedback] = await db.update(interviews).set({feedback:feedback})
     .where(eq(interviews.id,id))
     .returning();
 
