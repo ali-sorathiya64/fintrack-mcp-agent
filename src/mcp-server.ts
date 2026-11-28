@@ -69,8 +69,8 @@ mcpServer.tool(
     }
     
 )
-//updateApplication Tool
 
+//updateApplication Tool
 mcpServer.tool(
   {
     name: "update-application",
@@ -112,7 +112,7 @@ mcpServer.tool({
 
 )
 
-//  schedule-interview 
+// schedule-interview 
 mcpServer.tool(
   {
     name: "schedule-interview",
@@ -140,7 +140,7 @@ mcpServer.tool(
 
 
 
-//  get-interviews
+// get-interviews
 mcpServer.tool(
   {
     name: "get-interviews",
